@@ -1,0 +1,25 @@
+# Binary builds
+*.exe
+*.out
+
+# File laporan (jangan push ke GitHub)
+*.docx
+*.pdf
+
+# Environment variables (JANGAN push ke GitHub!)
+.env
+
+# Go workspace
+go.work
+go.work.sum
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/settings.json
+
+# Temporary test files
+test_results.html
+
