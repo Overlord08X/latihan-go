@@ -1,39 +1,57 @@
 # api-students — Modul 3: Database & Repository Pattern
 
-API mahasiswa menggunakan **Go + Fiber v2 + PostgreSQL** dengan arsitektur Repository Pattern.
+API CRUD mahasiswa menggunakan **Go + Fiber v2 + PostgreSQL** dengan arsitektur Repository Pattern.  
+Seluruh aplikasi (Go + PostgreSQL) berjalan di dalam **Docker container** — tidak perlu install Go di sistem host.
 
-## Environment
+## Stack Teknologi
 
-- Go `1.26.5`
-- Fiber v2 `v2.52.15`
-- PostgreSQL `18.4`
-- pgx/v5 `v5.10.0`
-- godotenv `v1.5.1`
-- Port: `3000` (dapat dikonfigurasi via `.env`)
+| Komponen | Versi |
+|----------|-------|
+| Go | `1.26.5` (di dalam Docker) |
+| Fiber v2 | `v2.52.15` |
+| PostgreSQL | `16-alpine` (Docker image) |
+| pgx/v5 | `v5.10.0` |
+| godotenv | `v1.5.1` |
+| Docker Compose | `v5.x` |
+| Port App | `3000` |
+| Port DB | `5432` |
 
-## Persiapan Database
+## Cara Menjalankan (Docker Compose)
 
-```sql
--- Buat database
-CREATE DATABASE praktikum_backend;
+> **Prasyarat:** Docker & Docker Compose sudah terinstall. Go **tidak** perlu diinstall di host.
+
+```bash
+# 1. Clone / masuk ke direktori proyek
+cd Modul_3/api-students
+
+# 2. Build image dan jalankan semua container (app + PostgreSQL)
+docker compose up --build -d
+
+# 3. Cek status container
+docker compose ps
+
+# 4. Lihat log aplikasi
+docker compose logs app -f
+
+# 5. Hentikan semua container
+docker compose down
 ```
 
-Migration tabel dijalankan otomatis saat server pertama kali dinyalakan.
+Aplikasi otomatis:
+- Menjalankan PostgreSQL dan menunggu hingga *healthy*
+- Menjalankan migration SQL (`migrations/001_create_students.sql`)
+- Menyalakan server di `http://localhost:3000`
 
-## Konfigurasi
+## Konfigurasi (Opsional)
 
-Salin dan sesuaikan file `.env`:
+File `.env` digunakan saat menjalankan **tanpa Docker** (local development):
 
 ```env
 APP_PORT=3000
-DB_DSN=postgres://postgres:password@localhost:5432/praktikum_backend?sslmode=disable
+DB_DSN=postgres://postgres:171005@localhost:5432/praktikum_backend?sslmode=disable
 ```
 
-## Cara Menjalankan
-
-```powershell
-go run .
-```
+Saat menggunakan Docker Compose, konfigurasi sudah di-set via `environment` di `docker-compose.yml`.
 
 ## Struktur Proyek
 

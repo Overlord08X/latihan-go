@@ -1,0 +1,406 @@
+{
+  "info": {
+    "_postman_id": "api-students-modul3",
+    "name": "API Students — Modul 3 Praktikum Backend Lanjut",
+    "description": "Dokumentasi API CRUD Mahasiswa menggunakan Go Fiber + PostgreSQL.\n\n**Base URL:** `http://localhost:3000`\n\n**Praktikan:** 434241096\n\n**Teknologi:**\n- Go (Fiber v2)\n- PostgreSQL\n- Docker & Docker Compose",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Root & Health",
+      "item": [
+        {
+          "name": "GET / — Cek Server",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/",
+              "host": ["{{base_url}}"],
+              "path": [""]
+            },
+            "description": "Endpoint root untuk mengecek apakah server berjalan."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                { "key": "Content-Type", "value": "text/plain; charset=utf-8" }
+              ],
+              "body": "API Students — Praktikum Backend Lanjut Pertemuan 3"
+            }
+          ]
+        },
+        {
+          "name": "GET /api/v1/health — Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/health",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "health"]
+            },
+            "description": "Endpoint untuk memastikan server dan waktu sistem berjalan normal."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"server berjalan\",\n  \"data\": {\n    \"timestamp\": \"2025-08-30T10:00:00.000Z\"\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Students",
+      "item": [
+        {
+          "name": "GET /api/v1/students — List Mahasiswa",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/students?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "students"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Nomor halaman (default: 1)"
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Jumlah data per halaman (default: 10, max: 100)"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Cari berdasarkan nama atau NIM (opsional)",
+                  "disabled": true
+                },
+                {
+                  "key": "sort",
+                  "value": "id",
+                  "description": "Kolom pengurutan: id | nim | name | grade | created_at (default: id)",
+                  "disabled": true
+                },
+                {
+                  "key": "order",
+                  "value": "asc",
+                  "description": "Arah urutan: asc | desc (default: asc)",
+                  "disabled": true
+                },
+                {
+                  "key": "is_active",
+                  "value": "true",
+                  "description": "Filter status aktif: true | false (opsional)",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Mengambil daftar mahasiswa dengan fitur paginasi, pencarian, dan pengurutan.\n\n**Query Parameters:**\n| Parameter | Tipe | Default | Keterangan |\n|-----------|------|---------|------------|\n| page | integer | 1 | Nomor halaman |\n| limit | integer | 10 | Data per halaman (max 100) |\n| search | string | - | Cari nama/NIM |\n| sort | string | id | Kolom sort: id, nim, name, grade, created_at |\n| order | string | asc | asc atau desc |\n| is_active | boolean | - | Filter status aktif |"
+          },
+          "response": [
+            {
+              "name": "200 OK — Berhasil",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"daftar mahasiswa\",\n  \"data\": [\n    {\n      \"id\": 1,\n      \"nim\": \"2023001\",\n      \"name\": \"Budi Santoso\",\n      \"grade\": 85.5,\n      \"is_active\": true,\n      \"created_at\": \"2025-08-30T10:00:00Z\"\n    },\n    {\n      \"id\": 2,\n      \"nim\": \"2023002\",\n      \"name\": \"Siti Rahayu\",\n      \"grade\": 90.0,\n      \"is_active\": true,\n      \"created_at\": \"2025-08-30T10:05:00Z\"\n    }\n  ],\n  \"meta\": {\n    \"page\": 1,\n    \"limit\": 10,\n    \"total\": 2,\n    \"total_pages\": 1\n  }\n}"
+            },
+            {
+              "name": "200 OK — Data Kosong",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"daftar mahasiswa\",\n  \"data\": [],\n  \"meta\": {\n    \"page\": 1,\n    \"limit\": 10,\n    \"total\": 0,\n    \"total_pages\": 0\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "POST /api/v1/students — Tambah Mahasiswa",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nim\": \"2023001\",\n  \"name\": \"Budi Santoso\",\n  \"grade\": 85.5,\n  \"is_active\": true\n}",
+              "options": {
+                "raw": { "language": "json" }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/students",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "students"]
+            },
+            "description": "Menambahkan data mahasiswa baru.\n\n**Request Body (wajib semua field):**\n| Field | Tipe | Keterangan |\n|-------|------|------------|\n| nim | string | Nomor Induk Mahasiswa (unik) |\n| name | string | Nama lengkap mahasiswa |\n| grade | float | Nilai (0.00 – 100.00) |\n| is_active | boolean | Status aktif mahasiswa |"
+          },
+          "response": [
+            {
+              "name": "201 Created — Berhasil",
+              "status": "Created",
+              "code": 201,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "Location", "value": "/api/v1/students/1" }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"created\",\n  \"data\": {\n    \"id\": 1,\n    \"nim\": \"2023001\",\n    \"name\": \"Budi Santoso\",\n    \"grade\": 85.5,\n    \"is_active\": true,\n    \"created_at\": \"2025-08-30T10:00:00Z\"\n  }\n}"
+            },
+            {
+              "name": "409 Conflict — NIM Duplikat",
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"NIM sudah digunakan\"\n}"
+            },
+            {
+              "name": "415 Unsupported Media Type",
+              "status": "Unsupported Media Type",
+              "code": 415,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Content-Type harus application/json\"\n}"
+            },
+            {
+              "name": "422 Unprocessable Entity — Validasi Gagal",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"validasi gagal\",\n  \"errors\": {\n    \"nim\": \"nim wajib diisi\",\n    \"name\": \"name wajib diisi\",\n    \"is_active\": \"is_active wajib diisi (true atau false)\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "GET /api/v1/students/:id — Detail Mahasiswa",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/students/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "students", "1"]
+            },
+            "description": "Mengambil detail satu mahasiswa berdasarkan ID.\n\n**Path Parameter:**\n| Parameter | Tipe | Keterangan |\n|-----------|------|------------|\n| id | integer | ID mahasiswa |"
+          },
+          "response": [
+            {
+              "name": "200 OK — Berhasil",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"data mahasiswa\",\n  \"data\": {\n    \"id\": 1,\n    \"nim\": \"2023001\",\n    \"name\": \"Budi Santoso\",\n    \"grade\": 85.5,\n    \"is_active\": true,\n    \"created_at\": \"2025-08-30T10:00:00Z\"\n  }\n}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"mahasiswa tidak ditemukan\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "PUT /api/v1/students/:id — Ganti Seluruh Data (Replace)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nim\": \"2023001\",\n  \"name\": \"Budi Santoso Diperbarui\",\n  \"grade\": 90.0,\n  \"is_active\": false\n}",
+              "options": {
+                "raw": { "language": "json" }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/students/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "students", "1"]
+            },
+            "description": "Mengganti seluruh data mahasiswa (semua field wajib diisi).\n\n**Path Parameter:**\n| Parameter | Tipe | Keterangan |\n|-----------|------|------------|\n| id | integer | ID mahasiswa |\n\n**Request Body (semua field wajib):**\n| Field | Tipe | Keterangan |\n|-------|------|------------|\n| nim | string | NIM baru |\n| name | string | Nama baru |\n| grade | float | Nilai baru |\n| is_active | boolean | Status aktif baru |"
+          },
+          "response": [
+            {
+              "name": "200 OK — Berhasil",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"data mahasiswa berhasil diperbarui\",\n  \"data\": {\n    \"id\": 1,\n    \"nim\": \"2023001\",\n    \"name\": \"Budi Santoso Diperbarui\",\n    \"grade\": 90.0,\n    \"is_active\": false,\n    \"created_at\": \"2025-08-30T10:00:00Z\"\n  }\n}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"mahasiswa tidak ditemukan\"\n}"
+            },
+            {
+              "name": "409 Conflict — NIM Duplikat",
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"NIM sudah digunakan\"\n}"
+            },
+            {
+              "name": "422 Unprocessable Entity — Validasi Gagal",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"validasi gagal\",\n  \"errors\": {\n    \"grade\": \"grade wajib diisi\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "PATCH /api/v1/students/:id — Perbarui Sebagian Data",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"grade\": 95.0,\n  \"is_active\": true\n}",
+              "options": {
+                "raw": { "language": "json" }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/students/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "students", "1"]
+            },
+            "description": "Memperbarui sebagian field mahasiswa. Hanya field yang dikirim yang akan diubah.\n\n**Path Parameter:**\n| Parameter | Tipe | Keterangan |\n|-----------|------|------------|\n| id | integer | ID mahasiswa |\n\n**Request Body (minimal 1 field, semua opsional):**\n| Field | Tipe | Keterangan |\n|-------|------|------------|\n| nim | string | NIM baru (opsional) |\n| name | string | Nama baru (opsional) |\n| grade | float | Nilai baru (opsional) |\n| is_active | boolean | Status aktif baru (opsional) |"
+          },
+          "response": [
+            {
+              "name": "200 OK — Berhasil",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"data mahasiswa berhasil diperbarui sebagian\",\n  \"data\": {\n    \"id\": 1,\n    \"nim\": \"2023001\",\n    \"name\": \"Budi Santoso\",\n    \"grade\": 95.0,\n    \"is_active\": true,\n    \"created_at\": \"2025-08-30T10:00:00Z\"\n  }\n}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"mahasiswa tidak ditemukan\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "DELETE /api/v1/students/:id — Hapus Mahasiswa",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/students/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "students", "1"]
+            },
+            "description": "Menghapus data mahasiswa berdasarkan ID.\n\n**Path Parameter:**\n| Parameter | Tipe | Keterangan |\n|-----------|------|------------|\n| id | integer | ID mahasiswa |"
+          },
+          "response": [
+            {
+              "name": "204 No Content — Berhasil",
+              "status": "No Content",
+              "code": 204,
+              "header": [],
+              "body": ""
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"mahasiswa tidak ditemukan\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Error Cases",
+      "item": [
+        {
+          "name": "GET — Endpoint Tidak Ditemukan (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/unknown",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "unknown"]
+            },
+            "description": "Contoh request ke endpoint yang tidak ada."
+          },
+          "response": [
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"endpoint tidak ditemukan\"\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
