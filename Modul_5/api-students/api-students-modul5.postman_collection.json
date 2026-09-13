@@ -1,0 +1,333 @@
+{
+  "info": {
+    "_postman_id": "api-students-modul5",
+    "name": "API Students — Modul 5 Authentication & Security",
+    "description": "Dokumentasi API Autentikasi (JWT) + CRUD Mahasiswa.\n\n**Base URL:** `http://localhost:3000`\n**Praktikan:** 434241096\n\n**Cara pakai:**\n1. Jalankan request '🔐 Login' terlebih dahulu\n2. Token akan otomatis tersimpan ke variable `access_token` dan `refresh_token`\n3. Semua request Students & Nilai sudah pakai token otomatis",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url",      "value": "http://localhost:3000", "type": "string" },
+    { "key": "access_token",  "value": "",                     "type": "string" },
+    { "key": "refresh_token", "value": "",                     "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "🔓 Auth",
+      "item": [
+        {
+          "name": "1. Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/api/v1/auth/register", "host": ["{{base_url}}"], "path": ["api","v1","auth","register"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"raihan\",\n  \"email\": \"raihan@example.com\",\n  \"password\": \"BelajarGo2024!\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Daftar user baru. Role selalu 'user' dari server (mass assignment dicegah).\n\n✅ Harapan: 201 Created, response TIDAK memuat field password"
+          }
+        },
+        {
+          "name": "2. Register — Password Lemah (422)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/api/v1/auth/register", "host": ["{{base_url}}"], "path": ["api","v1","auth","register"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"budi\",\n  \"email\": \"budi@example.com\",\n  \"password\": \"password123\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "❌ Password terlalu umum.\n\n✅ Harapan: 422 Unprocessable Entity"
+          }
+        },
+        {
+          "name": "3. Register — Mass Assignment (role tetap 'user')",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/api/v1/auth/register", "host": ["{{base_url}}"], "path": ["api","v1","auth","register"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin_palsu\",\n  \"email\": \"admin@x.com\",\n  \"password\": \"Admin@2024!\",\n  \"role\": \"admin\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Coba sisipkan role admin saat register.\n\n✅ Harapan: 201, tapi di response role tetap 'user'"
+          }
+        },
+        {
+          "name": "4. 🔐 Login (simpan token otomatis)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.data && json.data.access_token) {",
+                  "  pm.collectionVariables.set('access_token', json.data.access_token);",
+                  "  pm.collectionVariables.set('refresh_token', json.data.refresh_token);",
+                  "  console.log('✅ Token tersimpan otomatis!');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/api/v1/auth/login", "host": ["{{base_url}}"], "path": ["api","v1","auth","login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"sari\",\n  \"password\": \"K0piSusu!\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Login dengan akun yang sudah ada. Token otomatis tersimpan ke variable collection.\n\n✅ Harapan: 200, dapat access_token + refresh_token, TIDAK ada field password"
+          }
+        },
+        {
+          "name": "5. Login — Password Salah (user enumeration test)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/api/v1/auth/login", "host": ["{{base_url}}"], "path": ["api","v1","auth","login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"sari\",\n  \"password\": \"SALAHSEKALI\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "❌ Password salah.\n\n✅ Harapan: 401, pesan 'username atau password tidak valid'"
+          }
+        },
+        {
+          "name": "6. Login — Username Tidak Ada (user enumeration test)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/api/v1/auth/login", "host": ["{{base_url}}"], "path": ["api","v1","auth","login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"tidakada\",\n  \"password\": \"SALAHSEKALI\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "❌ Username tidak terdaftar.\n\n✅ Harapan: 401, pesan SAMA PERSIS dengan kasus password salah di atas"
+          }
+        },
+        {
+          "name": "7. GET /auth/me (profil saya)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{access_token}}", "type": "string" }] },
+            "url": { "raw": "{{base_url}}/api/v1/auth/me", "host": ["{{base_url}}"], "path": ["api","v1","auth","me"] },
+            "description": "Lihat profil user yang sedang login.\n\n✅ Harapan: 200, data user tanpa field password"
+          }
+        },
+        {
+          "name": "8. Refresh Token (rotasi)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.data && json.data.access_token) {",
+                  "  pm.collectionVariables.set('access_token', json.data.access_token);",
+                  "  pm.collectionVariables.set('refresh_token', json.data.refresh_token);",
+                  "  console.log('✅ Token baru tersimpan!');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/api/v1/auth/refresh", "host": ["{{base_url}}"], "path": ["api","v1","auth","refresh"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh_token\": \"{{refresh_token}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Minta token baru menggunakan refresh token.\n\n✅ Harapan PERTAMA KALI: 200 + token baru\n❌ Harapan KEDUA KALI (kirim lagi tanpa ubah): 401 (rotasi berhasil)"
+          }
+        },
+        {
+          "name": "9. Logout",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/api/v1/auth/logout", "host": ["{{base_url}}"], "path": ["api","v1","auth","logout"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh_token\": \"{{refresh_token}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Cabut refresh token (logout).\n\n✅ Harapan: 200"
+          }
+        }
+      ]
+    },
+    {
+      "name": "🛡️ Pengujian Keamanan",
+      "item": [
+        {
+          "name": "A. Akses /students TANPA token (401)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/v1/students", "host": ["{{base_url}}"], "path": ["api","v1","students"] },
+            "description": "Tidak ada Authorization header sama sekali.\n\n✅ Harapan: 401 + header WWW-Authenticate di tab Headers response"
+          }
+        },
+        {
+          "name": "B. Token Diubah 1 Karakter (401)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}RUSAK" }],
+            "url": { "raw": "{{base_url}}/api/v1/students", "host": ["{{base_url}}"], "path": ["api","v1","students"] },
+            "description": "Token asli + kata 'RUSAK' di belakang → signature tidak cocok.\n\n✅ Harapan: 401 'access token tidak valid'"
+          }
+        },
+        {
+          "name": "C. Token Algoritma 'none' (401)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJ1c2VybmFtZSI6InNhcmkiLCJyb2xlIjoidXNlciIsInN1YiI6IjEifQ." }],
+            "url": { "raw": "{{base_url}}/api/v1/students", "host": ["{{base_url}}"], "path": ["api","v1","students"] },
+            "description": "Token palsu dengan alg: none (serangan algorithm confusion).\n\n✅ Harapan: 401 'access token tidak valid'"
+          }
+        },
+        {
+          "name": "D. Brute Force Login #1 (401)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/api/v1/auth/login", "host": ["{{base_url}}"], "path": ["api","v1","auth","login"] },
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"sari\",\n  \"password\": \"SALAH1\"\n}", "options": { "raw": { "language": "json" } } },
+            "description": "Percobaan 1 dari 6"
+          }
+        },
+        {
+          "name": "D. Brute Force Login #2 (401)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/api/v1/auth/login", "host": ["{{base_url}}"], "path": ["api","v1","auth","login"] },
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"sari\",\n  \"password\": \"SALAH2\"\n}", "options": { "raw": { "language": "json" } } },
+            "description": "Percobaan 2 dari 6"
+          }
+        },
+        {
+          "name": "D. Brute Force Login #3 (401)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/api/v1/auth/login", "host": ["{{base_url}}"], "path": ["api","v1","auth","login"] },
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"sari\",\n  \"password\": \"SALAH3\"\n}", "options": { "raw": { "language": "json" } } },
+            "description": "Percobaan 3 dari 6"
+          }
+        },
+        {
+          "name": "D. Brute Force Login #4 (401)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/api/v1/auth/login", "host": ["{{base_url}}"], "path": ["api","v1","auth","login"] },
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"sari\",\n  \"password\": \"SALAH4\"\n}", "options": { "raw": { "language": "json" } } },
+            "description": "Percobaan 4 dari 6"
+          }
+        },
+        {
+          "name": "D. Brute Force Login #5 (401)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/api/v1/auth/login", "host": ["{{base_url}}"], "path": ["api","v1","auth","login"] },
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"sari\",\n  \"password\": \"SALAH5\"\n}", "options": { "raw": { "language": "json" } } },
+            "description": "Percobaan 5 dari 6"
+          }
+        },
+        {
+          "name": "D. Brute Force Login #6 — HARUSNYA 429!",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/api/v1/auth/login", "host": ["{{base_url}}"], "path": ["api","v1","auth","login"] },
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"sari\",\n  \"password\": \"SALAH6\"\n}", "options": { "raw": { "language": "json" } } },
+            "description": "Percobaan ke-6 → harus ditolak rate limiter.\n\n✅ Harapan: 429 Too Many Requests + header Retry-After: 30 di tab Headers response"
+          }
+        }
+      ]
+    },
+    {
+      "name": "👨‍🎓 Students (butuh token)",
+      "item": [
+        {
+          "name": "GET /students — List semua mahasiswa",
+          "request": {
+            "method": "GET",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{access_token}}", "type": "string" }] },
+            "url": { "raw": "{{base_url}}/api/v1/students", "host": ["{{base_url}}"], "path": ["api","v1","students"] }
+          }
+        },
+        {
+          "name": "POST /students — Tambah mahasiswa",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{access_token}}", "type": "string" }] },
+            "url": { "raw": "{{base_url}}/api/v1/students", "host": ["{{base_url}}"], "path": ["api","v1","students"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nim\": \"2023001\",\n  \"name\": \"Budi Santoso\",\n  \"grade\": 88.5,\n  \"is_active\": true\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📊 Nilai (butuh token)",
+      "item": [
+        {
+          "name": "POST /nilais — Tambah nilai",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{access_token}}", "type": "string" }] },
+            "url": { "raw": "{{base_url}}/api/v1/nilais", "host": ["{{base_url}}"], "path": ["api","v1","nilais"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_student\": 1,\n  \"nama_matkul\": \"Pemrograman Web\",\n  \"nilai\": 88.5\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "GET /students/:nim/nilais — Nilai berdasarkan NIM",
+          "request": {
+            "method": "GET",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{access_token}}", "type": "string" }] },
+            "url": { "raw": "{{base_url}}/api/v1/students/2023001/nilais", "host": ["{{base_url}}"], "path": ["api","v1","students","2023001","nilais"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "❤️ Health Check (publik)",
+      "item": [
+        {
+          "name": "GET /health",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/api/v1/health", "host": ["{{base_url}}"], "path": ["api","v1","health"] },
+            "description": "Endpoint publik, tidak butuh token.\n✅ Harapan: 200"
+          }
+        }
+      ]
+    }
+  ]
+}
