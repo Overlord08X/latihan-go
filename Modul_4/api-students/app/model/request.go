@@ -27,3 +27,10 @@ type PatchStudentRequest struct {
 	Grade    *float64 `json:"grade"`
 	IsActive *bool    `json:"is_active"`
 }
+
+// CreateNilaiRequest adalah body yang diharapkan untuk POST /nilais.
+type CreateNilaiRequest struct {
+	IDStudent  *int     `json:"id_student"`
+	NamaMatkul string   `json:"nama_matkul"`
+	Nilai      *float64 `json:"nilai"`
+}

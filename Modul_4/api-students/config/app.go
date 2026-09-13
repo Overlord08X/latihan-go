@@ -45,13 +45,18 @@ func BuildApp(db *pgxpool.Pool) *fiber.App {
 	})
 
 
-	// Inisiasi Layer
+	// Inisiasi Layer Mahasiswa
 	studentRepo := repository.NewStudentRepository(db)
 	studentSvc := service.NewStudentService(studentRepo)
+
+	// Inisiasi Layer Nilai
+	nilaiRepo := repository.NewNilaiRepository(db)
+	nilaiSvc := service.NewNilaiService(nilaiRepo)
 
 	// Register Routes
 	api := app.Group("/api/v1")
 	route.RegisterStudent(api, studentSvc)
+	route.RegisterNilai(api, nilaiSvc)
 
 	// Fallback untuk route yang tidak ditemukan (404)
 	app.Use(func(c *fiber.Ctx) error {
