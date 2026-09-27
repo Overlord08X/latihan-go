@@ -100,3 +100,10 @@ Jalankan pengujian unit tanpa database:
 docker run --rm -v "$PWD":/app -w /app golang:alpine go test -v ./app/service/...
 ```
 Seluruh 40 unit test mencakup validasi password, registrasi, otorisasi RBAC pengguna, otorisasi kepemilikan mahasiswa, dan validasi data berstatus **PASS**.
+
+---
+
+## Koleksi Postman
+
+Dokumentasi endpoint dan skrip pengujian RBAC otomatis tersedia di berkas:
+[`api-students-modul6.postman_collection.json`](api-students-modul6.postman_collection.json)

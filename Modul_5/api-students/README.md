@@ -246,3 +246,10 @@ Bantuan AI (Google Antigravity) digunakan sebagai pendamping pembelajaran untuk:
 - Membantu penulisan **fungsi murni** (`ValidatePasswordStrength`) yang dapat diuji secara unit tanpa Fiber.
 - Mengkonfigurasi **rate limiter** Fiber sebagai middleware per-route.
 - Membantu memeriksa kode dan menjelaskan error build, termasuk masalah *import cycle*.
+
+---
+
+## Koleksi Postman
+
+Dokumentasi endpoint dan skrip pengujian autentikasi otomatis tersedia di berkas:
+[`api-students-modul5.postman_collection.json`](api-students-modul5.postman_collection.json)
