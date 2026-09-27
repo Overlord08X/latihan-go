@@ -1,0 +1,40 @@
+# Environment variables & secrets
+.env
+*.env
+*.env.local
+
+# Build artifacts & binaries
+*.exe
+*.zip
+*.tar.gz
+*.html
+/api-students
+*/api-students/api-students
+
+
+# Application logs
+*.log
+logs/
+*/logs/*.log
+
+# Course problem specifications (soal) and student reports (laporan)
+*.docx
+*.pdf
+Kontrak_kuliah/
+Modul_*/Modul *
+Modul_*/*.docx
+Modul_*/*.pdf
+Modul_*/Tugas*
+Tugas*
+*_backup.*
+
+# Screenshots and extracted media
+*/screenshots/
+*/extracted_images/
+screenshots/
+extracted_images/
+
+# Helper and scratch scripts
+fix_docx.py
+verify_*.py
+scratch/

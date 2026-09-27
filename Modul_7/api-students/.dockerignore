@@ -1,0 +1,5 @@
+.env
+*.md
+*.postman_collection.json
+.git
+.gitignore

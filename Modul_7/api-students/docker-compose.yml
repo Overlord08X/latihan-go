@@ -1,0 +1,47 @@
+services:
+  # ============================================================================
+  # Database PostgreSQL
+  # ============================================================================
+  db:
+    image: postgres:16-alpine
+    container_name: praktikum_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 171005
+      POSTGRES_DB: praktikum_backend
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d praktikum_backend"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ============================================================================
+  # Aplikasi Go — api-students
+  # ============================================================================
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api_students_m7
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      APP_PORT: 3000
+      # Host 'db' merujuk ke nama service PostgreSQL di atas
+      DB_DSN: postgres://postgres:171005@db:5432/praktikum_backend?sslmode=disable
+      # JWT — ganti JWT_SECRET dengan nilai acak minimal 32 karakter
+      JWT_SECRET: 5c93764d8be7a1e774297e8f054561d6b3bb76732fe477e549a4a12f53f72353
+      JWT_ACCESS_TTL_MINUTES: 15
+      JWT_REFRESH_TTL_DAYS: 7
+    ports:
+      - "3000:3000"
+
+volumes:
+  pgdata:
