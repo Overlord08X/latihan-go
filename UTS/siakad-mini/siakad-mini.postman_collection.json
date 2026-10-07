@@ -1,0 +1,1350 @@
+{
+  "info": {
+    "_postman_id": "siakad-mini-uts-pbe-434241096",
+    "name": "SIAKAD Mini API \u2014 UTS Pemrograman Backend Lanjut (434241096)",
+    "description": "Koleksi Postman Resmi Pengujian 10 Endpoint SIAKAD Mini sesuai spesifikasi UTS-PBE.pdf.\n\nPraktikan: Raihan Zulfa Kamal (NIM: 434241096)\nBase URL: {{base_url}}\n\nAlur Pengujian:\n1. Jalankan '01. Authentication > 1.1 Login Admin' dan '1.2 Login Mahasiswa - Raihan' untuk menyimpan token otomatis.\n2. Jalankan request secara berurutan.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "admin_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "mhs_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "citra_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "created_student_id",
+      "value": "21",
+      "type": "string"
+    },
+    {
+      "key": "enrolled_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "01. Authentication & Profiling",
+      "item": [
+        {
+          "name": "1.1 Login Admin (200 OK)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 OK', function () { pm.response.to.have.status(200); });",
+                  "var res = pm.response.json();",
+                  "if (res.data && res.data.access_token) {",
+                  "    pm.collectionVariables.set('admin_token', res.data.access_token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@siakad.ac.id\",\n  \"password\": \"Admin123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "1.2 Login Mahasiswa - Raihan (200 OK)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 OK', function () { pm.response.to.have.status(200); });",
+                  "var res = pm.response.json();",
+                  "if (res.data && res.data.access_token) {",
+                  "    pm.collectionVariables.set('mhs_token', res.data.access_token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"mhs01@siakad.ac.id\",\n  \"password\": \"434241096001\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "1.3 Login Mahasiswa - Citra Dewi (200 OK)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 OK', function () { pm.response.to.have.status(200); });",
+                  "var res = pm.response.json();",
+                  "if (res.data && res.data.access_token) {",
+                  "    pm.collectionVariables.set('citra_token', res.data.access_token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"mhs04@siakad.ac.id\",\n  \"password\": \"434241096004\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "1.4 Login Gagal - Password Salah (401 Unauthorized)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 401 Unauthorized', function () { pm.response.to.have.status(401); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@siakad.ac.id\",\n  \"password\": \"SalahPassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "1.5 Login Gagal - Validasi Input (422 Unprocessable Entity)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 422 Unprocessable Entity', function () { pm.response.to.have.status(422); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"bukan-email\",\n  \"password\": \"pendek\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "1.6 GET /auth/me - Profil Admin (200 OK)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 OK', function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "me"
+              ]
+            }
+          }
+        },
+        {
+          "name": "1.7 GET /auth/me - Profil Mahasiswa dengan Data Student (200 OK)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 OK', function () { pm.response.to.have.status(200); });",
+                  "var res = pm.response.json();",
+                  "pm.test('Contains student data', function () { pm.expect(res.data).to.have.property('student'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{mhs_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "me"
+              ]
+            }
+          }
+        },
+        {
+          "name": "1.8 GET /auth/me - Tanpa Token (401 Unauthorized)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 401 Unauthorized', function () { pm.response.to.have.status(401); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "me"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "02. Manajemen Mahasiswa (Khusus Admin)",
+      "item": [
+        {
+          "name": "2.1 GET Students - Pagination Default (Page 1, Limit 10) (200 OK)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 OK', function () { pm.response.to.have.status(200); });",
+                  "var res = pm.response.json();",
+                  "pm.test('Has pagination meta', function () { pm.expect(res.meta).to.have.property('total'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/students?page=1&per_page=10",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "2.2 GET Students - Filter Prodi & Angkatan (200 OK)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 OK', function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/students?prodi=D4 Teknik Informatika&angkatan=2024",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students"
+              ],
+              "query": [
+                {
+                  "key": "prodi",
+                  "value": "D4 Teknik Informatika"
+                },
+                {
+                  "key": "angkatan",
+                  "value": "2024"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "2.3 GET Students - Search NIM / Nama (200 OK)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 OK', function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/students?search=Raihan",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students"
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "Raihan"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "2.4 GET Students - Sorting (-ipk_terakhir) (200 OK)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 OK', function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/students?sort=-ipk_terakhir",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students"
+              ],
+              "query": [
+                {
+                  "key": "sort",
+                  "value": "-ipk_terakhir"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "2.5 POST Student - Tambah Mahasiswa Baru Sah (201 Created)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 201 Created', function () { pm.response.to.have.status(201); });",
+                  "var res = pm.response.json();",
+                  "if (res.data && res.data.id) {",
+                  "    pm.collectionVariables.set('created_student_id', res.data.id.toString());",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nim\": \"434241096099\",\n  \"nama\": \"Mahasiswa Baru Tester\",\n  \"email\": \"mhsbaru@siakad.ac.id\",\n  \"prodi\": \"D4 Teknik Informatika\",\n  \"angkatan\": 2024,\n  \"ipk_terakhir\": 3.65\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/students",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students"
+              ]
+            }
+          }
+        },
+        {
+          "name": "2.6 POST Student - Validasi Gagal NIM Kurang dari 12 Digit (422)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 422 Unprocessable Entity', function () { pm.response.to.have.status(422); });",
+                  "var res = pm.response.json();",
+                  "pm.test('Has error details for nim', function () { pm.expect(res.errors).to.have.property('nim'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nim\": \"123456789\",\n  \"nama\": \"Invalid NIM\",\n  \"email\": \"invalidnim@siakad.ac.id\",\n  \"prodi\": \"D4 Teknik Informatika\",\n  \"angkatan\": 2024,\n  \"ipk_terakhir\": 3.0\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/students",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students"
+              ]
+            }
+          }
+        },
+        {
+          "name": "2.7 POST Student - Duplikasi NIM (422 Unprocessable Entity)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 422 Unprocessable Entity', function () { pm.response.to.have.status(422); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nim\": \"434241096001\",\n  \"nama\": \"Raihan Kloning\",\n  \"email\": \"raihan.kloning@siakad.ac.id\",\n  \"prodi\": \"D4 Teknik Informatika\",\n  \"angkatan\": 2024,\n  \"ipk_terakhir\": 3.85\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/students",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students"
+              ]
+            }
+          }
+        },
+        {
+          "name": "2.8 POST Student - Ditolak Akses Mahasiswa (403 Forbidden)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 403 Forbidden', function () { pm.response.to.have.status(403); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{mhs_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nim\": \"434241096088\",\n  \"nama\": \"Ilegal Create\",\n  \"email\": \"ilegal@siakad.ac.id\",\n  \"prodi\": \"D4 Teknik Informatika\",\n  \"angkatan\": 2024\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/students",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students"
+              ]
+            }
+          }
+        },
+        {
+          "name": "2.9 PUT Student - Update Profil Mahasiswa (200 OK)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 OK', function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama\": \"Mahasiswa Tester Terupdate\",\n  \"prodi\": \"D4 Teknik Informatika\",\n  \"angkatan\": 2024,\n  \"ipk_terakhir\": 3.9\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/students/{{created_student_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students",
+                "{{created_student_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "2.10 DELETE Student - Soft Delete Mahasiswa (204 No Content)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 204 No Content', function () { pm.response.to.have.status(204); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/students/{{created_student_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students",
+                "{{created_student_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "2.11 DELETE Student - ID Tidak Ditemukan / Sudah Dihapus (404 Not Found)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 404 Not Found', function () { pm.response.to.have.status(404); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/students/9999",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students",
+                "9999"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "03. Akses Mahasiswa & KRS",
+      "item": [
+        {
+          "name": "3.1 GET Student Detail - Mahasiswa Akses Data Sendiri (200 OK)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 OK', function () { pm.response.to.have.status(200); });",
+                  "var res = pm.response.json();",
+                  "pm.test('Contains mata_kuliah and SKS calculations', function () {",
+                  "    pm.expect(res.data).to.have.property('mata_kuliah');",
+                  "    pm.expect(res.data).to.have.property('total_sks');",
+                  "    pm.expect(res.data).to.have.property('batas_sks');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{mhs_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/students/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "3.2 GET Student Detail - Mahasiswa Akses Orang Lain (403 Forbidden)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 403 Forbidden', function () { pm.response.to.have.status(403); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{mhs_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/students/2",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students",
+                "2"
+              ]
+            }
+          }
+        },
+        {
+          "name": "3.3 GET Courses - Seluruh Mata Kuliah & Sisa Kuota (200 OK)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 OK', function () { pm.response.to.have.status(200); });",
+                  "var res = pm.response.json();",
+                  "pm.test('Course items contain quota calculation', function () {",
+                  "    pm.expect(res.data[0]).to.have.property('terisi');",
+                  "    pm.expect(res.data[0]).to.have.property('sisa_kuota');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{mhs_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/courses",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "courses"
+              ]
+            }
+          }
+        },
+        {
+          "name": "3.4 GET Courses - Filter Semester & Search (200 OK)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 OK', function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{mhs_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/courses?semester=5&search=Backend",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "courses"
+              ],
+              "query": [
+                {
+                  "key": "semester",
+                  "value": "5"
+                },
+                {
+                  "key": "search",
+                  "value": "Backend"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "3.5 GET Courses - Filter Available=true (Hanya Kuota Tersedia) (200 OK)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 OK', function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{mhs_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/courses?available=true",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "courses"
+              ],
+              "query": [
+                {
+                  "key": "available",
+                  "value": "true"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "04. Pengambilan KRS (Enrollments)",
+      "item": [
+        {
+          "name": "4.1 POST Enrollment - Ambil Mata Kuliah Sah (201 Created)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 201 Created', function () { pm.response.to.have.status(201); });",
+                  "var res = pm.response.json();",
+                  "if (res.data && res.data.id) {",
+                  "    pm.collectionVariables.set('enrolled_id', res.data.id.toString());",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{mhs_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"course_id\": 3,\n  \"tahun_akademik\": \"2026/2027-Ganjil\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/enrollments",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "enrollments"
+              ]
+            }
+          }
+        },
+        {
+          "name": "4.2 POST Enrollment - Duplikasi Mata Kuliah Sama di Semester Sama (409 Conflict)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 409 Conflict', function () { pm.response.to.have.status(409); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{mhs_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"course_id\": 1,\n  \"tahun_akademik\": \"2026/2027-Ganjil\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/enrollments",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "enrollments"
+              ]
+            }
+          }
+        },
+        {
+          "name": "4.3 POST Enrollment - Kuota Mata Kuliah Penuh (422 Unprocessable Entity)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 422 Unprocessable Entity', function () { pm.response.to.have.status(422); });",
+                  "var res = pm.response.json();",
+                  "pm.test('Message indicates full quota', function () { pm.expect(res.message).to.include('penuh'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{mhs_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"course_id\": 9,\n  \"tahun_akademik\": \"2026/2027-Ganjil\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/enrollments",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "enrollments"
+              ]
+            }
+          }
+        },
+        {
+          "name": "4.4 POST Enrollment - Batas SKS Terlampaui (422 Unprocessable Entity)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 422 Unprocessable Entity', function () { pm.response.to.have.status(422); });",
+                  "var res = pm.response.json();",
+                  "pm.test('Message mentions remaining SKS', function () { pm.expect(res.message).to.include('sisa SKS'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{citra_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"course_id\": 6,\n  \"tahun_akademik\": \"2026/2027-Ganjil\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/enrollments",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "enrollments"
+              ]
+            }
+          }
+        },
+        {
+          "name": "4.5 POST Enrollment - Ditolak Role Admin (403 Forbidden)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 403 Forbidden', function () { pm.response.to.have.status(403); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"course_id\": 3,\n  \"tahun_akademik\": \"2026/2027-Ganjil\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/enrollments",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "enrollments"
+              ]
+            }
+          }
+        },
+        {
+          "name": "4.6 DELETE Enrollment - Mahasiswa Batalkan KRS Milik Sendiri (204 No Content)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 204 No Content', function () { pm.response.to.have.status(204); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{mhs_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/enrollments/{{enrolled_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "enrollments",
+                "{{enrolled_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "4.7 DELETE Enrollment - Mahasiswa Batalkan KRS Orang Lain (403 Forbidden)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 403 Forbidden', function () { pm.response.to.have.status(403); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{mhs_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/enrollments/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "enrollments",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "4.8 DELETE Enrollment - ID Tidak Ditemukan (404 Not Found)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 404 Not Found', function () { pm.response.to.have.status(404); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{mhs_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/enrollments/9999",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "enrollments",
+                "9999"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
