@@ -10,7 +10,8 @@
 *.html
 /api-students
 */api-students/api-students
-
+/siakad-mini
+*/siakad-mini/siakad-mini
 
 # Application logs
 *.log
@@ -26,6 +27,9 @@ Modul_*/*.docx
 Modul_*/*.pdf
 Modul_*/Tugas*
 Tugas*
+Laporan*
+UTS/Laporan*
+UTS/*.pdf
 *_backup.*
 
 # Screenshots and extracted media
