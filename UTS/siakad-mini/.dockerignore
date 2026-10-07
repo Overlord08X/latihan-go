@@ -1,0 +1,5 @@
+.git
+.env
+*.log
+logs
+siakad-mini
