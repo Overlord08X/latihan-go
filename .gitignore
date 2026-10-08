@@ -45,3 +45,7 @@ scratch/
 UTS/*.py
 UTS/siakad-mini/*.py
 UTS/siakad-mini/vendor/
+
+# Agent and IDE local directories
+.agents/
+.remember/
