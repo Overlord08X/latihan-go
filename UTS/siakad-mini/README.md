@@ -2,11 +2,6 @@
 
 Repositori implementasi RESTful API Back End untuk **SIAKAD Mini**, layanan akademik sederhana yang mengelola data mahasiswa, mata kuliah, dan Kartu Rencana Studi (KRS). Dibuat dengan bahasa pemrograman **Go (Golang)** menggunakan framework **Fiber v2** dan basis data relasional **PostgreSQL 16**.
 
-- **Nama**: Raihan Zulfa Kamal
-- **NIM**: 434241096
-- **Program Studi**: D4 Teknik Informatika
-- **Mata Kuliah**: Praktikum Pemrograman Backend Lanjut (Semester 5)
-
 ---
 
 ## 1. Arsitektur dan Fitur Utama
@@ -117,7 +112,7 @@ Password default setiap mahasiswa sama dengan **NIM** masing-masing.
 
 | No | NIM | Nama Mahasiswa | Email | Prodi | Angkatan | IPK | Batas SKS | Password Default |
 |:---|:---|:---|:---|:---|:---|:---|:---|:---|
-| 1 | `434241096001` | Raihan Zulfa Kamal | `mhs01@siakad.ac.id` | D4 Teknik Informatika | 2024 | 3.85 | 24 | `434241096001` |
+| 1 | `434241096001` | Mahasiswa 01 | `mhs01@siakad.ac.id` | D4 Teknik Informatika | 2024 | 3.85 | 24 | `434241096001` |
 | 2 | `434241096002` | Ahmad Fauzi | `mhs02@siakad.ac.id` | D4 Teknik Informatika | 2024 | 3.50 | 24 | `434241096002` |
 | 3 | `434241096003` | Budi Santoso | `mhs03@siakad.ac.id` | D4 Teknik Informatika | 2023 | 2.80 | 21 | `434241096003` |
 | 4 | `434241096004` | Citra Dewi | `mhs04@siakad.ac.id` | Sistem Informasi | 2024 | 2.30 | 18 | `434241096004` |
@@ -127,7 +122,7 @@ Password default setiap mahasiswa sama dengan **NIM** masing-masing.
 > **Catatan Kasus Uji Khusus pada Data Seeder:**
 > 1. **Uji Kuota Penuh (422)**: Mata kuliah `MK009` (*Kapita Selekta Informatika*) dikonfigurasi berkuota 2 dan telah terisi 2 mahasiswa pada semester `2026/2027-Ganjil`.
 > 2. **Uji Batas SKS Terlampaui (422)**: Mahasiswa Citra Dewi (`mhs04@siakad.ac.id`, IPK 2.30, batas 18 SKS) telah terdaftar 17 SKS pada semester `2026/2027-Ganjil`. Mengambil mata kuliah 3 SKS tambahan akan memicu penolakan 422 disertai info sisa SKS.
-> 3. **Uji Duplikasi KRS (409)**: Mahasiswa Raihan Zulfa Kamal (`mhs01@siakad.ac.id`) telah mengambil `MK001` pada semester `2026/2027-Ganjil`. Mengambil kembali akan memicu 409 Conflict.
+> 3. **Uji Duplikasi KRS (409)**: Mahasiswa 01 (`mhs01@siakad.ac.id`) telah mengambil `MK001` pada semester `2026/2027-Ganjil`. Mengambil kembali akan memicu 409 Conflict.
 
 ---
 
@@ -197,7 +192,7 @@ UTS/siakad-mini/siakad-mini.postman_collection.json
 1. Buka aplikasi **Postman**.
 2. Klik tombol **Import** di pojok kiri atas.
 3. Seret (*drag-and-drop*) atau pilih berkas `siakad-mini.postman_collection.json`.
-4. Koleksi **SIAKAD Mini API - UTS Pemrograman Backend Lanjut (434241096)** akan muncul dengan 4 folder terstruktur:
+4. Koleksi **SIAKAD Mini API - UTS Pemrograman Backend Lanjut** akan muncul dengan 4 folder terstruktur:
    - `01. Authentication & Profiling` (8 request)
    - `02. Manajemen Mahasiswa (Khusus Admin)` (11 request)
    - `03. Akses Mahasiswa & KRS` (5 request)

@@ -1,8 +1,8 @@
 {
   "info": {
-    "_postman_id": "siakad-mini-uts-pbe-434241096",
-    "name": "SIAKAD Mini API \u2014 UTS Pemrograman Backend Lanjut (434241096)",
-    "description": "Koleksi Postman Resmi Pengujian 10 Endpoint SIAKAD Mini sesuai spesifikasi UTS-PBE.pdf.\n\nPraktikan: Raihan Zulfa Kamal (NIM: 434241096)\nBase URL: {{base_url}}\n\nAlur Pengujian:\n1. Jalankan '01. Authentication > 1.1 Login Admin' dan '1.2 Login Mahasiswa - Raihan' untuk menyimpan token otomatis.\n2. Jalankan request secara berurutan.",
+    "_postman_id": "siakad-mini-uts-pbe",
+    "name": "SIAKAD Mini API - UTS Pemrograman Backend Lanjut",
+    "description": "Koleksi Postman Resmi Pengujian 10 Endpoint SIAKAD Mini sesuai spesifikasi UTS-PBE.pdf.\n\nBase URL: {{base_url}}\n\nAlur Pengujian:\n1. Jalankan '01. Authentication > 1.1 Login Admin' dan '1.2 Login Mahasiswa - Raihan' untuk menyimpan token otomatis.\n2. Jalankan request secara berurutan.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
