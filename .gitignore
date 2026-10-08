@@ -42,3 +42,6 @@ extracted_images/
 fix_docx.py
 verify_*.py
 scratch/
+UTS/*.py
+UTS/siakad-mini/*.py
+UTS/siakad-mini/vendor/
