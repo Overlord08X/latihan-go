@@ -1,0 +1,657 @@
+{
+  "info": {
+    "name": "api-students - Modul 10 (API dengan MongoDB & Polyglot Persistence)",
+    "description": "Koleksi endpoint pengujian untuk Modul 10: Integrasi MongoDB dengan PostgreSQL (Polyglot Persistence), ulasan mata kuliah (course reviews), portofolio mahasiswa (student portfolios), dan agregasi data.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "token_admin",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "token_mhs",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "review_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "project_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "01. Health Check",
+      "item": [
+        {
+          "name": "Check Dual Database Health (PostgreSQL + MongoDB)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "health"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "02. Authentication",
+      "item": [
+        {
+          "name": "Login Admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Login Mahasiswa",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"mhs001\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "03. Course Reviews (Modul 10 Core)",
+      "item": [
+        {
+          "name": "Submit Review (Enrolled Student)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_mhs}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": 5,\n  \"comment\": \"Materi sangat komprehensif, implementasi ACID dan isolasi transaksi dijelaskan dengan studi kasus nyata.\",\n  \"tags\": [\n    \"rekomendasi\",\n    \"praktis\",\n    \"menantang\"\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/courses/1/reviews",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "courses",
+                "1",
+                "reviews"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Submit Review Duplicate Check (409 Conflict)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_mhs}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": 4,\n  \"comment\": \"Mencoba submit ulasan kedua kali untuk mata kuliah yang sama.\",\n  \"tags\": [\n    \"duplikat\"\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/courses/1/reviews",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "courses",
+                "1",
+                "reviews"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Submit Review Non-Enrolled Check (403 Forbidden)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_mhs}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": 3,\n  \"comment\": \"Mencoba ulas kelas yang belum pernah diambil.\",\n  \"tags\": [\n    \"belum-ambil\"\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/courses/99/reviews",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "courses",
+                "99",
+                "reviews"
+              ]
+            }
+          }
+        },
+        {
+          "name": "List Course Reviews (Pagination & Tag Filter)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_admin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/courses/1/reviews?page=1&limit=10&tag=rekomendasi",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "courses",
+                "1",
+                "reviews"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "tag",
+                  "value": "rekomendasi"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Course Reviews Summary (Aggregation Pipeline)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_admin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/courses/1/reviews/summary",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "courses",
+                "1",
+                "reviews",
+                "summary"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Own Review",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_mhs}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": 5,\n  \"comment\": \"Ulasan diperbarui setelah menyelesaikan modul MongoDB. Sangat memuaskan!\",\n  \"tags\": [\n    \"rekomendasi\",\n    \"polyglot\",\n    \"praktis\"\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/reviews/{{review_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reviews",
+                "{{review_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Mark Review as Helpful (Upvote)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_admin}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/reviews/{{review_id}}/helpful",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reviews",
+                "{{review_id}}",
+                "helpful"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Add Official Reply to Review (Staff/Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_admin}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"comment\": \"Terima kasih atas ulasan positifnya! Terus eksplorasi arsitektur database modern.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/reviews/{{review_id}}/replies",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reviews",
+                "{{review_id}}",
+                "replies"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Review by Admin (Moderation)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_admin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/reviews/{{review_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reviews",
+                "{{review_id}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "04. Student Portfolios (Tugas Mandiri C)",
+      "item": [
+        {
+          "name": "Get Student Portfolio (Initial - 404 Check)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_admin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/students/5/portfolio",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students",
+                "5",
+                "portfolio"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Upsert Student Portfolio (Create / Replace)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_admin}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"headline\": \"Junior Backend Developer & Cloud Enthusiast\",\n  \"bio\": \"Mahasiswa D4 Teknik Informatika yang berfokus pada arsitektur microservices dan performa database.\",\n  \"projects\": [\n    {\n      \"title\": \"API Akademik Mahasiswa\",\n      \"technologies\": [\n        \"Go\",\n        \"PostgreSQL\",\n        \"Docker\"\n      ],\n      \"link\": \"https://github.com/mahasiswa/api-students\",\n      \"year\": 2024\n    },\n    {\n      \"title\": \"Sistem Monitoring IoT\",\n      \"technologies\": [\n        \"Go\",\n        \"MongoDB\",\n        \"MQTT\"\n      ],\n      \"link\": \"https://github.com/mahasiswa/iot-monitor\",\n      \"year\": 2024\n    }\n  ],\n  \"certificates\": [\n    {\n      \"name\": \"Certified Go Developer\",\n      \"issuer\": \"Golang Institute\",\n      \"date\": \"2024-05-10\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/students/5/portfolio",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students",
+                "5",
+                "portfolio"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Add Project to Portfolio (POST Project)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_admin}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Aplikasi E-Commerce Microservices\",\n  \"technologies\": [\n    \"Go\",\n    \"gRPC\",\n    \"Redis\",\n    \"PostgreSQL\"\n  ],\n  \"link\": \"https://github.com/mahasiswa/ecommerce-ms\",\n  \"year\": 2025\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/students/5/portfolio/projects",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students",
+                "5",
+                "portfolio",
+                "projects"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Project from Portfolio ()",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_admin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/students/5/portfolio/projects/{{project_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students",
+                "5",
+                "portfolio",
+                "projects",
+                "{{project_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Top 10 Technologies Stats (Aggregation Pipeline)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_admin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/portfolios/stats/technologies",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "portfolios",
+                "stats",
+                "technologies"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "05. Negative & Boundary Test Cases",
+      "item": [
+        {
+          "name": "404 Mahasiswa Not Found in PostgreSQL",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_admin}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"headline\": \"Student Palsu\",\n  \"bio\": \"Bio mahasiswa yang tidak terdaftar di PostgreSQL\",\n  \"projects\": [],\n  \"certificates\": []\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/students/99999/portfolio",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students",
+                "99999",
+                "portfolio"
+              ]
+            }
+          }
+        },
+        {
+          "name": "422 Validation Error on Project Data",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_admin}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"X\",\n  \"technologies\": [],\n  \"year\": 1990\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/students/5/portfolio/projects",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students",
+                "5",
+                "portfolio",
+                "projects"
+              ]
+            }
+          }
+        },
+        {
+          "name": "400 Invalid Student ID Param",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_admin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/students/abc/portfolio",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students",
+                "abc",
+                "portfolio"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
