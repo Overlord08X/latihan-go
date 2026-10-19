@@ -1,0 +1,349 @@
+{
+	"info": {
+		"_postman_id": "b3e9a710-9099-4c91-9a72-e1d994324109",
+		"name": "API Students - Modul 9 (Transactions & Concurrency)",
+		"description": "Koleksi Postman untuk pengujian endpoint Modul 9 (KRS Concurrency, Locking, Deadlock Prevention, dan Pembimbing TA)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login Admin",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auth", "login"]
+						}
+					}
+				},
+				{
+					"name": "Login Student (mhs001)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"mhs001\",\n    \"password\": \"admin123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auth", "login"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Courses & KRS",
+			"item": [
+				{
+					"name": "List Courses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/courses",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "courses"]
+						}
+					}
+				},
+				{
+					"name": "My Courses (KRS)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/courses/mine",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "courses", "mine"]
+						}
+					}
+				},
+				{
+					"name": "Get Course By ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/courses/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "courses", "1"]
+						}
+					}
+				},
+				{
+					"name": "Enroll Course",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/courses/1/enroll",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "courses", "1", "enroll"]
+						}
+					}
+				},
+				{
+					"name": "Drop Course",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/courses/1/enroll",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "courses", "1", "enroll"]
+						}
+					}
+				},
+				{
+					"name": "Swap Courses",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from_course_id\": 1,\n    \"to_course_id\": 2\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/enrollments/swap",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "enrollments", "swap"]
+						}
+					}
+				},
+				{
+					"name": "Update Quota (Optimistic Locking)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"quota\": 45,\n    \"version\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/courses/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "courses", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Supervisors (D.2)",
+			"item": [
+				{
+					"name": "List Supervisors",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/supervisors",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "supervisors"]
+						}
+					}
+				},
+				{
+					"name": "Get Supervisor By ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/supervisors/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "supervisors", "1"]
+						}
+					}
+				},
+				{
+					"name": "Assign Supervisor",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"student_id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/supervisors/1/assign",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "supervisors", "1", "assign"]
+						}
+					}
+				},
+				{
+					"name": "Switch Supervisor",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"student_id\": 1,\n    \"to_supervisor_id\": 2\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/supervisions/switch",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "supervisions", "switch"]
+						}
+					}
+				},
+				{
+					"name": "Update Supervisor Quota",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"quota\": 5,\n    \"version\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/supervisors/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "supervisors", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Health",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/api/v1/health",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "health"]
+						}
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000"
+		},
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "admin_token",
+			"value": ""
+		}
+	]
+}
