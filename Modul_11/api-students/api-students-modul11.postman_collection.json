@@ -59,18 +59,19 @@
       "name": "02. Authentication",
       "item": [
         {
-          "name": "Login Admin",
+          "name": "Login Admin (Token Admin)",
           "request": {
             "method": "POST",
             "header": [
               {
                 "key": "Content-Type",
-                "value": "application/json"
+                "value": "application/json",
+                "type": "text"
               }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"Password123!\"\n}"
+              "raw": "{\"username\": \"admin\", \"password\": \"Praktikum123!\"}"
             },
             "url": {
               "raw": "{{base_url}}/api/v1/auth/login",
@@ -87,18 +88,19 @@
           }
         },
         {
-          "name": "Login Mahasiswa",
+          "name": "Login Mahasiswa Uji (mhsuji)",
           "request": {
             "method": "POST",
             "header": [
               {
                 "key": "Content-Type",
-                "value": "application/json"
+                "value": "application/json",
+                "type": "text"
               }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"username\": \"mhs001\",\n  \"password\": \"Password123!\"\n}"
+              "raw": "{\"username\": \"mhsuji\", \"password\": \"Praktikum123!\"}"
             },
             "url": {
               "raw": "{{base_url}}/api/v1/auth/login",
@@ -110,6 +112,263 @@
                 "v1",
                 "auth",
                 "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Login Akun Salah Alamat (salahalamat - C.4)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\": \"salahalamat\", \"password\": \"Praktikum123!\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Courses & KRS",
+      "item": [
+        {
+          "name": "List Courses",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_mhs}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/courses",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "courses"
+              ]
+            }
+          }
+        },
+        {
+          "name": "My Courses (KRS)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_mhs}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/courses/mine",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "courses",
+                "mine"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Course By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_mhs}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/courses/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "courses",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Enroll Course",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_mhs}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/courses/1/enroll",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "courses",
+                "1",
+                "enroll"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Drop Course",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_mhs}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/courses/1/enroll",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "courses",
+                "1",
+                "enroll"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Swap Courses",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_mhs}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"from_course_id\": 1,\n    \"to_course_id\": 2\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/enrollments/swap",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "enrollments",
+                "swap"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PATCH /courses/:id (Update Quota - D.2)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_admin}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"quota\": 45,\n    \"version\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/courses/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "courses",
+                "1"
               ]
             }
           }
